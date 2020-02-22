@@ -1,0 +1,14 @@
+{
+  "name": "chapter-3",
+  "version": "1.0.0",
+  "description": "first package",
+  "main": "meadowlark.js",
+  "scripts": {
+    "test": "yes"
+  },
+  "author": "emb",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
