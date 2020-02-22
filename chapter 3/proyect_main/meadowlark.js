@@ -1,6 +1,15 @@
 var express = require('express');
 var app = express();
 app.set('port', process.env.PORT || 3000);
+//adding routes for the home page and about page
+app.get('/', function(req, res){
+  res.type('text/plain');
+  res.send('Meadowlark Travel');
+});
+app.get('/about', function(req, res){
+  res.type('text/plain');
+  res.send('About Meadowlark Travel');
+});
 //custom 404 page
 app.use(function(req, res){
 res.type('text/plain');
