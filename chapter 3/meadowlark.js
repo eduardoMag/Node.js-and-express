@@ -1,5 +1,5 @@
 var express = require('express');
-var fortune =require('./lib/fortune.js');
+var fortune =require('./lib/fortune.js');//this is covered by chaper 4
 var app = express();
 
 //set up handlebars view engine
@@ -8,7 +8,7 @@ app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
 app.set('port', process.env.PORT || 3000);
 
-/* file created for this array
+/* file created for this array, see chapter 4
 var fortunes = [
   "Conquer and Destroy!",
   "Who is They? And Why Me?",
@@ -26,6 +26,7 @@ app.get('/', function(req, res){
 });
 app.get('/about', function(req, res){
   res.render('about',{fortune: fortune.getFortune() } );
+  //the getFortune function is seen in chapter 4
 });
 
 //404 catch-all handler (middleware)
