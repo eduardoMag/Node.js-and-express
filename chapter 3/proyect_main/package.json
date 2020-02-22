@@ -1,0 +1,14 @@
+{
+  "name": "package.json",
+  "version": "1.0.0",
+  "description": "first package for chapter 3",
+  "main": "meadowlark.js",
+  "scripts": {
+    "test": "yes"
+  },
+  "author": "eduardoMag",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
