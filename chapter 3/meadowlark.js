@@ -6,6 +6,14 @@ var handlebars = require('express3-handlebars').create({ defaultLayout:'main'});
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
 app.set('port', process.env.PORT || 3000);
+var fortunes = [
+  "Conquer and Destroy!",
+  "Who is They? And Why Me?",
+  "I challenge you to a Pokemon Battle!",
+  "Smell ya laters.",
+  "Now is not the time nor place.",
+  "Try again if it does work the first time.",
+];
 //static middleware
 app.use(express.static(__dirname + '/public'));
 //new routes for templates
@@ -13,7 +21,8 @@ app.get('/', function(req, res){
   res.render('home');
 });
 app.get('/about', function(req, res){
-  res.render('about');
+  var randomFortune = fortunes[Math.floor(Math.random() * fortunes.length)];
+  res.render('about',{fortune: randomFortune});
 });
 //404 catch-all handler (middleware)
 app.use(function(req, res){
