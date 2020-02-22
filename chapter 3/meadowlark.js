@@ -1,4 +1,5 @@
 var express = require('express');
+var fortune =require('./lib/fortune.js');
 var app = express();
 
 //set up handlebars view engine
@@ -6,6 +7,8 @@ var handlebars = require('express3-handlebars').create({ defaultLayout:'main'});
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
 app.set('port', process.env.PORT || 3000);
+
+/* file created for this array
 var fortunes = [
   "Conquer and Destroy!",
   "Who is They? And Why Me?",
@@ -13,7 +16,8 @@ var fortunes = [
   "Smell ya laters.",
   "Now is not the time nor place.",
   "Try again if it does work the first time.",
-];
+]; */
+
 //static middleware
 app.use(express.static(__dirname + '/public'));
 //new routes for templates
@@ -21,9 +25,9 @@ app.get('/', function(req, res){
   res.render('home');
 });
 app.get('/about', function(req, res){
-  var randomFortune = fortunes[Math.floor(Math.random() * fortunes.length)];
-  res.render('about',{fortune: randomFortune});
+  res.render('about',{fortune: fortune.getFortune() } );
 });
+
 //404 catch-all handler (middleware)
 app.use(function(req, res){
   res.status(404);
