@@ -2,18 +2,17 @@ var express = require('express');
 var fortune =require('./lib/fortune.js');
 var app = express();
 
-//handlebars view engine
-var handlebars = require('express3-handlebars').create({ defaultLayout:'main'});
-app.engine('handlebars', handlebars.engine);
-app.set('view engine', 'handlebars');
-app.set('port', process.env.PORT || 3000);
-
 //static middleware
 app.use(express.static(__dirname + '/public'));
 app.use(function(req, res, next){
   res.locals.showTests = app.get('env') !== 'production' && req.query.test === '1';
   next();
 });
+//handlebars view engine
+var handlebars = require('express3-handlebars').create({ defaultLayout:'main'});
+app.engine('handlebars', handlebars.engine);
+app.set('view engine', 'handlebars');
+app.set('port', process.env.PORT || 3000);
 
 //routes for templates
 app.get('/', function(req, res){
