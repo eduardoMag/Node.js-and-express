@@ -1,15 +1,29 @@
 const express = require('express');
 const fortune =require('./lib/fortune.js');
+const formidable = require('formidable'); //npm install --save formidable
+const jqupload = require('Jquery-file-upload-middleware'); //npm install --save jquery-file-upload-middleware
 const app = express();
 
 //static middleware
 app.use(express.static(__dirname + '/public'));
-app.use(function(req, res, next){
+app.use( (req, res, next)=>{
   res.locals.showTests = app.get('env') !== 'production' && req.query.test === '1';
   next();
 });
+
 app.use(require('body-parser') () );
 
+app.use('/upload', (req, res, next)=>{
+  var now = Date.now();
+  jqupload.fieldHandler({
+    uploadDir: ()=>{
+      return _dirname + '/public/uploads/' + now;
+    },
+    uploadUrl: ()=>{
+      return '/uploads/' + now;
+    },
+  })(req, res, next);
+});
 //handlebars view engine
 const handlebars = require('express-handlebars').create({ defaultLayout:'main'});
 app.engine('handlebars', handlebars.engine);
@@ -48,6 +62,17 @@ app.post('/process', (req, res)=>{
 //  res.redirect(303, '/thank-you');
 });
 
+app.get('/contest/vacation-photo/:year/:month', (req, res)=>{
+  var form = new formidable.IncomingForm();
+  form.parse(req, (err, fields, files)=>{
+    if(err) return res.redirect(303, '/error');
+    console.log('recieved fields:');
+    console.log(fields);
+    console.log('recieved files:');
+    console.log(files);
+    res.redirect(303, '/thank-you');
+  });
+});
 //404 catch-all handler (middleware)
 app.use((req, res)=>{
   res.status(404);
