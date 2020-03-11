@@ -55,11 +55,11 @@ app.post('/process', (req, res)=>{
   } else{
     res.redirect(303, '/thank-you');
   }
-//  console.log('Form (from querystring): '+ req.query.form);
-//  console.log('CSRF token (from hidden form field): '+ req.body._csrf);
-//  console.log('Name (from visible form field): ' + req.body.name);
-//  console.log('Email (from visible form field): ' + req.body.email);
-//  res.redirect(303, '/thank-you');
+  //  console.log('Form (from querystring): '+ req.query.form);
+  //  console.log('CSRF token (from hidden form field): '+ req.body._csrf);
+  //  console.log('Name (from visible form field): ' + req.body.name);
+  //  console.log('Email (from visible form field): ' + req.body.email);
+  //  res.redirect(303, '/thank-you');
 });
 
 app.get('/contest/vacation-photo/:year/:month', (req, res)=>{
