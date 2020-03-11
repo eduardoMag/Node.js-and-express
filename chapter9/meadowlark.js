@@ -2,6 +2,7 @@ const express = require('express');
 const fortune =require('./lib/fortune.js');
 const formidable = require('formidable'); //npm install --save formidable
 const jqupload = require('Jquery-file-upload-middleware'); //npm install --save jquery-file-upload-middleware
+const credentials = require('./credentials.js'); //npm install --save cookie-parser
 const app = express();
 
 //static middleware
@@ -24,6 +25,8 @@ app.use('/upload', (req, res, next)=>{
     },
   })(req, res, next);
 });
+
+app.use(require('cookie-parser')(credentials.cookieSecret));
 //handlebars view engine
 const handlebars = require('express-handlebars').create({ defaultLayout:'main'});
 app.engine('handlebars', handlebars.engine);
