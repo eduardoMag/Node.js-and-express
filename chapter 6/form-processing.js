@@ -1,9 +1,9 @@
 //  FORMS
-
+//BODY-PARSER MUST BE LINKED IN
 
 //basic form processing
 app.post('/process-contact', (req, res)=>{
-  console.log('Received contact from '+req.body.name+' <'+req.body.email+'>');
+  console.log('Received contact from ' + req.body.name+ ' <' +req.body.email+ '>');
 //save to database...
 res.redirect(303, '/thank-you');
 });

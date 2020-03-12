@@ -30,7 +30,7 @@ app.get('/greeting', (req, res)=>{
 //rendering a view without a layout
 //file must have all the html elements necessary
 app.get('/no-layout', (req, res=>{
-  res.render('no-layout', {layout: 'custom' });
+  res.render('no-layout', {layout: 'null' });
 });
 
 //rendering a view with a custom layout
@@ -38,7 +38,7 @@ app.get('/custom-layout', (req, res)=>{
   res.render( 'custom-layout', {layout: 'custom' });
 });
 
-//rendering plain context
+//rendering plain context output
 app.get('/test', (req, res)=>{
   res.type('text/plain');
   res.send('this is a test');
