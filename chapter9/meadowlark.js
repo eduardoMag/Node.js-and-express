@@ -3,6 +3,8 @@ const fortune =require('./lib/fortune.js');
 const formidable = require('formidable'); //npm install --save formidable
 const jqupload = require('Jquery-file-upload-middleware'); //npm install --save jquery-file-upload-middleware
 const credentials = require('./credentials.js'); //npm install --save cookie-parser
+/* var monster = req.cookies.monster;
+var signedMonster = req.signedCookies.monster; */
 const app = express();
 
 //static middleware
@@ -27,15 +29,29 @@ app.use('/upload', (req, res, next)=>{
 });
 
 app.use(require('cookie-parser')(credentials.cookieSecret));
+app.use(require('express-session') () ); //npm install --save express-session
 //handlebars view engine
 const handlebars = require('express-handlebars').create({ defaultLayout:'main'});
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
 app.set('port', process.env.PORT || 3000);
 
+//TO DISPLAY FLASH MESSAGES
+app.use( (req, res, next)=>{
+  //if there's a flash message, transfer it to the context, then clear
+  res.locals.flash = req.session.flash;
+  delete req.session.flash;
+  next();
+});
+
 //routes for templates
 app.get('/', (req, res)=>{
   res.render('home');
+  /*you can set a cookie or signed cookie anywhere you have access
+  to a request object, example as shown below*/
+  res.cookie('monster', 'nom nom');
+  res.cookie('signed_monster', 'nom nom', {signed: true});
+  res.clearcookie('monster'); //to delete cookie
 });
 
 app.get('/about', (req, res)=>{
