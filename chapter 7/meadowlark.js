@@ -4,7 +4,16 @@ const fortune =require('./lib/fortune.js');
 const app = express();
 
 //handlebars view engine
-const handlebars = require('express-handlebars').create({ defaultLayout:'main'});
+let handlebars = require('express-handlebars').create({
+  defaultLayout:'main',
+  helpers: {
+    section: (name, options)=>{
+      if(!this._sections) this._sections = {};
+      this._sections[name] = options.fn(this);
+      return null;
+    }
+  }
+});
 
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
@@ -15,16 +24,13 @@ app.use(express.static(__dirname + '/public'));
 
 //set 'showTests' context property if jquery contains test=1
 app.use( (req, res, next) => {
-  res.locals.showTests = app.get('env') !== 'production' && req.query.test === '1';
+  res.locals.showTests = app.get('env') !== 'production' &&
+  req.query.test === '1';
   next();
 });
 
-//body-parser
-app.use(require('body-parser') () );
-
 //mocked Weather data
-
-getWeatherData()=>{
+function getWeatherData(){
   return{
     locations: [
       {
@@ -52,18 +58,20 @@ getWeatherData()=>{
   };
 }
 //middlewrae for getWeatherData
-app.use( (req,res, next)=>{
-  if(!res.locals.partials) res.locals.partials ={};
-  res.locals.partials.weather = getWeatherData();
+app.use( (req, res, next)=>{
+  if(!res.locals.partials) res.locals.partials = {};
+  res.locals.partials.weatherContext = getWeatherData();
   next();
 });
+
 //routes for templates
 app.get('/', (req, res)=>{
   res.render('home');
 });
 
 app.get('/about', (req, res)=>{
-  res.render('about',{fortune: fortune.getFortune(), pageTestScript: '/qa/tests-about.js' } );
+  res.render('about',{fortune: fortune.getFortune(),
+    pageTestScript: '/qa/tests-about.js' } );
 });
 
 app.get('/tours/hood-river', (req, res)=>{
@@ -73,7 +81,7 @@ app.get('/tours/request-group-rate', (req, res)=>{
   res.render('tours/request-group-rate');
 });
 
-aap.get('/newsletter', (req, res)=>{
+app.get('/newsletter', (req, res)=>{
   res.render('newsletter', { csrf: 'CSRF token goes here'});//dummy value
 });
 app.post('/process', (req, res)=>{
@@ -82,6 +90,22 @@ app.post('/process', (req, res)=>{
   console.log('Name (from visible form field): ' + req.body.name);
   console.log('Email (from visible form field): ' + req.body.email);
   res.redirect(303, '/thank-you');
+});
+//jquery test page route
+app.get('/jquery-test', (req, res)=>{
+  res.render('jquery-test');
+})
+//ROUTE HANDLERS FOR NURSERY RHYME
+app.get('/nursery-rhyme', (req, res)=>{
+  res.render('nursery-rhyme');
+});
+app.get('/data/nursery-rhyme', (req, res)=>{
+  res.json({
+    animal: 'squirrel',
+    bodyPart: 'tail',
+    adjective: 'bushy',
+    noun: 'heck',
+  });
 });
 //404 catch-all handler (middleware)
 app.use((req, res)=>{
