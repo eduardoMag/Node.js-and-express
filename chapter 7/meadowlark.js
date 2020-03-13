@@ -11,9 +11,45 @@ app.use(function(req, res, next){
 app.use(require('body-parser')());
 
 //handlebars view engine
-const handlebars = require('express-handlebars').create({ defaultLayout:'main'});
+const handlebars = require('express3-handlebars').create({ defaultLayout:'main'});
 app.engine('handlebars', handlebars.engine);
 app.set('view engine', 'handlebars');
+
+//WEATHER FUNCTION
+function getWeatherData(){
+  return{
+    locations:[
+      {
+        name: 'Portland',
+        forcastUrl: 'http://www.wunderground.com/US/OR/Portland.html',
+        iconUrl: 'http://icons-ak.wxug.com/i/c/k/cloudy.gif',
+        weather: 'Overcast',
+        temp: '54.1 F (12.3 C)',
+      },
+      {
+        name: 'Bend',
+        forecastUrl: 'http://www.wunderground.com/US/OR/Bend.html',
+        iconUrl: 'http://icons-ak.wxug.com/i/c/k/partlycloudy.gif',
+        weather: 'Partly Cloudy',
+        temp: '55.0 F (12.8 C)',
+      },
+      {
+        name: 'Manzanita',
+        forecastUrl: 'http://www.wunderground.com/US/OR/Manzanita.html',
+        iconUrl: 'http://icons-ak.wxug.com/i/c/k/rain.gif',
+        weather: 'Light Rain',
+        temp: '55.0 F (12.8 C)',
+      },
+    ],
+  };
+}
+//MIDDLEWARE FOR WEATHER WIDGET
+app.use( (req, res, next)=>{
+  if(!res.locals.partials) res.locals.partials = {};
+  res.locals.partials.weather = getWeatherData();
+  next();
+});
+
 app.set('port', process.env.PORT || 3000);
 
 //routes for templates
@@ -32,8 +68,8 @@ app.get('/tours/request-group-rate', (req, res)=>{
   res.render('tours/request-group-rate');
 });
 
-aap.get('/newsletter', (req, res)=>{
-  res.render('newsletter', { csrf: 'CSRF token goes here'});//dummy value
+app.get('/newsletter', (req, res)=>{
+  res.render('newsletter', { csrf: '854920124578'});//dummy value
 });
 app.post('/process', (req, res)=>{
   console.log('Form (from querystring): '+ req.query.form);
