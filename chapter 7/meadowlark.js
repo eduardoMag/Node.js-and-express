@@ -1,19 +1,31 @@
-const express = require('express');
-const fortune =require('./lib/fortune.js');
-const app = express();
+var express = require('express');
+var fortune =require('./lib/fortune.js');
+var app = express();
+
+//handlebars view engine
+var handlebars = require('express3-handlebars').create({
+  defaultLayout:'main',
+  helpers: {
+    section: (name, options)=>{
+      if(!this._sections) this._sections = {};
+      this._sections[name] = options.fn(this);
+      return null;
+    }
+  }
+});
+app.engine('handlebars', handlebars.engine);
+app.set('view engine', 'handlebars');
+
+app.set('port', process.env.PORT || 3000);
 
 //static middleware
 app.use(express.static(__dirname + '/public'));
-app.use(function(req, res, next){
+
+//set 'show tests' context property
+app.use( (req, res, next)=>{
   res.locals.showTests = app.get('env') !== 'production' && req.query.test === '1';
   next();
 });
-app.use(require('body-parser')());
-
-//handlebars view engine
-const handlebars = require('express3-handlebars').create({ defaultLayout:'main'});
-app.engine('handlebars', handlebars.engine);
-app.set('view engine', 'handlebars');
 
 //WEATHER FUNCTION
 function getWeatherData(){
@@ -50,15 +62,15 @@ app.use( (req, res, next)=>{
   next();
 });
 
-app.set('port', process.env.PORT || 3000);
-
 //routes for templates
 app.get('/', (req, res)=>{
   res.render('home');
 });
 
 app.get('/about', (req, res)=>{
-  res.render('about',{fortune: fortune.getFortune(), pageTestScript: '/qa/tests-about.js' } );
+  res.render('about',{
+    fortune: fortune.getFortune(),
+    pageTestScript: '/qa/tests-about.js' } );
 });
 
 app.get('/tours/hood-river', (req, res)=>{
@@ -67,16 +79,19 @@ app.get('/tours/hood-river', (req, res)=>{
 app.get('/tours/request-group-rate', (req, res)=>{
   res.render('tours/request-group-rate');
 });
-
-app.get('/newsletter', (req, res)=>{
-  res.render('newsletter', { csrf: '854920124578'});//dummy value
+app.get('/jquery-test', (req, res)=>{
+  res.render('jquery-test');
 });
-app.post('/process', (req, res)=>{
-  console.log('Form (from querystring): '+ req.query.form);
-  console.log('CSRF token (from hidden form field): '+ req.body._csrf);
-  console.log('Name (from visible form field): ' + req.body.name);
-  console.log('Email (from visible form field): ' + req.body.email);
-  res.redirect(303, '/thank-you');
+app.get('/nursery-rhyme', (req, res)=>{
+  res.render('nursery-rhyme');
+});
+app.get('/data/nursery-rhyme', (req, res)=>{
+  res.json({
+    animal: 'squirrel',
+    bodyPart: 'tail',
+    adjective: 'bushy',
+    noun: 'heck',
+  });
 });
 //404 catch-all handler (middleware)
 app.use((req, res)=>{

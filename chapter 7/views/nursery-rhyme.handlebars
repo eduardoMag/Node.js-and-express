@@ -1,23 +1,25 @@
 {{#section 'head'}}
-<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.3/handlebars.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.7.3/handlebars.js">
+</script>
+
 <script id="nurseryRhymeTemplate" type="text/x-handlebars-template">
-Marry has a little <b>\{{animal}}</b>, its <b>\{{bodyPart}}</b>
-was <b>\{{adjective}}</b> as <b>\{{noun}}</b>.
+Marry had a little <b>\{{animal}}, its <b>\{{bodyPart}}</b> was <b>\{{adjective}}</b> as <b>\{{noun}}</b>.
 </script>
 {{/section}}
 
 <div id="nurseryRhyme">Click a button...</div>
 <hr>
-<button id="btnNurseryRhyme">Generate a nursery rhyme</button>
-<button id="btnNurseryRhymeAjax">Generate a nursery Rhyme from Ajax</button>
+<button id="btnNurseryRhyme">Generate a nursery Rhyme</button>
+<button id="btnNUrseryRhymeAjax">Generate a Nursery Rhyme from Ajax</button>
 
 {{#section 'jquery'}}
 <script>
-$(document).ready( ()=>{
-  let nurseryRhymeTemplate = handlebars.compile(
-    $('#nurseryRhymeTemplate').html() );
+$(document).ready(function(){
 
-    let $nurseryRhyme = $('#nurseryRhyme');
+  var nurseryRhymeTemplate = Handlebars.compile(
+    $('#nurseryRhymeTemplate').html());
+
+    var $nurseryRhyme = $('nurseryRhyme');
 
     $('#btnNurseryRhyme').on('click', (evt)=>{
       evt.preventDefault();
